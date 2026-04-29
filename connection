@@ -1,0 +1,22 @@
+function placeOrder() {
+
+let order = {
+    name: document.getElementById("name").value,
+    address: document.getElementById("address").value,
+    phone: document.getElementById("phone").value,
+    cakeName: document.getElementById("cakeName").value
+};
+
+fetch("http://localhost:8080/order", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(order)
+})
+.then(res => res.text())
+.then(data => {
+    alert(data);
+    closePopup();
+});
+}

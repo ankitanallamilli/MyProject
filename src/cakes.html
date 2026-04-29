@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vinn's & Anki's Cakes</title>
+
+<style>
+body {
+    margin:0;
+    font-family:'Segoe UI';
+    background: linear-gradient(to right,#fff0f3,#ffe5ec);
+}
+
+/* NAV */
+nav {
+    display:flex;
+    justify-content:space-between;
+    padding:12px 20px;
+    background:#ff4d6d;
+    color:white;
+}
+
+nav input {
+    padding:8px;
+    border-radius:5px;
+    border:none;
+}
+
+/* HERO */
+.hero {
+    text-align:center;
+    padding:40px;
+    color:rgb(108, 106, 106);
+    background:url('https://source.unsplash.com/1600x500/?cake,cherry') center/cover;
+}
+
+.hero h1 { font-size:50px; }
+
+/* SLIDER */
+.slider {
+    overflow:hidden;
+    margin:20px;
+}
+
+.slide-track {
+    display:flex;
+    animation: scroll 20s linear infinite;
+}
+
+.slide {
+    min-width:300px;
+    margin:10px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 10px gray;
+    text-align:center;
+}
+
+.slide img {
+    width:100%;
+    height:180px;
+    border-radius:10px;
+}
+
+@keyframes scroll {
+    0% {transform:translateX(0);}
+    100% {transform:translateX(-100%);}
+}
+
+/* FILTER */
+.filter {
+    text-align:center;
+    margin:20px;
+}
+
+.filter button {
+    margin:5px;
+    padding:10px;
+    border:none;
+    background:#ff4d6d;
+    color:white;
+    cursor:pointer;
+}
+
+/* GRID */
+.container {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card {
+    background:white;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+
+.card:hover { transform:scale(1.05); }
+
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.qty {
+    width:50px;
+}
+
+button {
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    padding:8px;
+    margin:5px;
+    cursor:pointer;
+}
+
+/* CART */
+.cart-btn {
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#ff4d6d;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+}
+
+.cart-box {
+    position:fixed;
+    bottom:80px;
+    right:20px;
+    background:white;
+    width:300px;
+    padding:15px;
+    display:none;
+}
+
+/* POPUP */
+.popup {
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.popup-content {
+    background:white;
+    padding:20px;
+    width:300px;
+    border-radius:10px;
+}
+
+.popup input {
+    width:100%;
+    margin:8px 0;
+    padding:8px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h2>🍰 Cakes & Bakes</h2>
+<input type="text" placeholder="&#128269; Search cakes...">
+</nav>
+
+<div class="hero">
+<h1>Celebrations of Love ❤️</h1>
+</div>
+
+<!-- 🎉 OCCASION SLIDER -->
+<div class="slider">
+<div class="slide-track">
+
+<div class="slide">
+<img src="birthday.jpg">
+<h3>Birthday Cakes 🎂</h3>
+</div>
+
+<div class="slide">
+<img src="Christmas.jpg">
+<h3>Christmas Cakes 🎄</h3>
+</div>
+
+<div class="slide">
+<img src="Heart.webp">
+<h3>Valentine Cakes ❤️</h3>
+</div>
+
+<div class="slide">
+<img src="father.jpeg">
+<h3>Father's Day 👔</h3>
+</div>
+
+<div class="slide">
+<img src="mothersday.jpg">
+<h3>Mother's Day 🌸</h3>
+</div>
+<div class="slide">
+<img src="childrens day.jpeg">
+<h3>Children's Day </h3>
+</div>
+<div class="slide">
+<img src="weddingcake.webp">
+<h3>Wedding's Day </h3>
+</div>
+</div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter">
+<button onclick="filter('all')">All</button>
+<button onclick="filter('chocolate')">Chocolate</button>
+<button onclick="filter('fruit')">Fruit</button>
+<button onclick="filter('designer')">Designer</button>
+<button onclick="filter('occasion')">Occasion</button>
+</div>
+
+<div class="filter">
+<button onclick="eggFilter('all')">All</button>
+<button onclick="eggFilter('egg')">Egg</button>
+<button onclick="eggFilter('eggless')">Eggless</button>
+</div>
+
+<div class="container" id="cakeList"></div>
+
+<!-- CART -->
+<div class="cart-btn" onclick="toggleCart()">🛒</div>
+
+<div class="cart-box" id="cartBox">
+<h3>Cart</h3>
+<ul id="cartItems"></ul>
+<h4>Total: ₹<span id="total">0</span></h4>
+</div>
+
+<!-- ORDER POPUP -->
+<div class="popup" id="popup">
+<div class="popup-content">
+<h3>Order</h3>
+<input id="name" placeholder="Name">
+<input id="address" placeholder="Address">
+<input id="phone" placeholder="Phone">
+<input id="cakeName" readonly>
+<button onclick="placeOrder()">Confirm</button>
+<button onclick="closePopup()">Cancel</button>
+</div>
+</div>
+
+<script>
+let cakes = [
+{name:"Chocolate Cake",price:500,cat:"chocolate",type:"egg",img:"chocolate.jpeg"},
+{name:"KitKat Cake",price:650,cat:"chocolate",type:"eggless", img:"kit.jpg"},
+{name:"Mango Cake",price:450,cat:"fruit",type:"eggless", img:"mango.jpg"},
+{name:"Birthday Cake",price:700,cat:"occasion",type:"egg", img:"birth3.webp"},
+{name:"Christmas Cake",price:750,cat:"occasion",type:"eggless", img:"cs.jpeg"},
+{name:"Valentine Cake",price:800,cat:"occasion",type:"eggless", img:"weddingcake.webp"}
+];
+
+let currentCat="all";
+let currentType="all";
+let cart=[]; let total=0;
+
+function display(){
+ let list = cakes.filter(c =>
+  (currentCat=="all"||c.cat==currentCat) &&
+  (currentType=="all"||c.type==currentType)
+ );
+
+ let html="";
+
+ list.forEach((c,i)=>{
+  html += `
+  <div class="card">
+    <img src="${c.img}">
+    <h3>${c.name}</h3>
+    <p>₹${c.price}</p>
+    <p>${c.type}</p>
+    Qty:<input id="q${i}" type="number" value="1">
+    <button onclick="orderNow('${c.name}',${i})">Order</button>
+  </div>`;
+ });
+
+ document.getElementById("cakeList").innerHTML = html;
+}
+display();
+
+function filter(c){currentCat=c; display();}
+function eggFilter(t){currentType=t; display();}
+
+function orderNow(name,i){
+document.getElementById("popup").style.display="flex";
+document.getElementById("cakeName").value=name+" x"+document.getElementById("q"+i).value;
+}
+
+function closePopup(){document.getElementById("popup").style.display="none";}
+
+function placeOrder(){
+alert("Order placed 🎉");
+closePopup();
+}
+
+function searchCake(val){
+display();
+}
+
+function toggleCart(){
+let box=document.getElementById("cartBox");
+box.style.display=box.style.display=="block"?"none":"block";
+}
+</script>
+
+</body>
+</html>
